@@ -74,12 +74,16 @@ occlusiCheck = occlusiCheck.to(device)
 transform = transforms.Compose([transforms.ToTensor()])
 revtransf = transforms.Compose([transforms.ToPILImage()])
 
-trainset = dataloader_full.SuperSloMo(root=args.dataset_dir, transform=transform, train=True, frm_num = args.frm_num)
-train_sample = torch.utils.data.sampler.RandomSampler(trainset)
-train_loader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, sampler = train_sample, drop_last = True)
+from atd12k import get_loader
+train_loader = get_loader('train', args.dataset_dir, args.batch_size, shuffle=True, num_workers=args.num_workers)
+valid_loader = get_loader('test', args.dataset_dir, args.test_batch_size, shuffle=False, num_workers=args.num_workers)
 
-validationset = dataloader_full.SuperSloMo(root=args.dataset_dir, transform=transform, train=False, frm_num = args.frm_num)
-valid_loader = torch.utils.data.DataLoader(validationset, batch_size=args.batch_size, drop_last = True)
+# trainset = dataloader_full.SuperSloMo(root=args.dataset_dir, transform=transform, train=True, frm_num = args.frm_num)
+# train_sample = torch.utils.data.sampler.RandomSampler(trainset)
+# train_loader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, sampler = train_sample, drop_last = True)
+#
+# validationset = dataloader_full.SuperSloMo(root=args.dataset_dir, transform=transform, train=False, frm_num = args.frm_num)
+# valid_loader = torch.utils.data.DataLoader(validationset, batch_size=args.batch_size, drop_last = True)
 
 print('train_loader: ',len(train_loader), '\t', args.batch_size, '\t', len(train_loader)*args.batch_size)
 print('valid_loader: ',len(valid_loader), '\t', args.batch_size, '\t', len(valid_loader)*args.batch_size)
@@ -118,17 +122,15 @@ def validate():
     
     with torch.no_grad():
         
-        for validationIndex, (imgs, sktt) in enumerate(valid_loader):
+        for validationIndex, (imgs, path) in enumerate(valid_loader):
 
             for i in range(len(imgs)):
                 imgs[i] = imgs[i].to(device)
 
-            sktt = sktt.to(device)
-
             img0 = imgs[0]
             img1 = imgs[-1]
 
-            imgt_temp = netT(torch.cat((sktt, img0, img1), dim = 1))
+            imgt_temp = netT(torch.cat((img0, img1), dim = 1))
             featSkt = sketExt(imgt_temp)
             featIg0 = imagExt(img0)
             featIg1 = imagExt(img1)
@@ -145,7 +147,7 @@ def validate():
             O_t0 = occlusiCheck(f_t0, f_0t)
             O_t1 = occlusiCheck(f_t1, f_1t)
 
-            W_0 = blenEst(torch.cat((I_t0, I_t1, O_t0, O_t1, sktt), dim = 1))
+            W_0 = blenEst(torch.cat((I_t0, I_t1, O_t0, O_t1), dim = 1))
 
             W_1 = 1 - W_0
             I_t = W_0 * I_t0 + W_1 * I_t1
@@ -188,7 +190,7 @@ def validate():
                     O_k0 = occlusiCheck(f_k0, f_0k)
                     O_kt = occlusiCheck(f_kt, f_tk)
 
-                    W_0 = blenEst(torch.cat((I_k0, I_kt, O_k0, O_kt, flowBackWarp(sktt, f_kt)), dim = 1))
+                    W_0 = blenEst(torch.cat((I_k0, I_kt, O_k0, O_kt, flowBackWarp( f_kt)), dim = 1))
                     W_1 = 1 - W_0
                     I_k = W_0 * I_k0 + W_1 * I_kt
 
@@ -243,22 +245,21 @@ for epoch in range(start_epoch, args.epochs):
     sumReconLoss = 0
     sumTrainLoss = 0
 
-    for trainIndex, (imgs, sktt) in enumerate(train_loader):
+    for trainIndex, (imgs) in enumerate(train_loader):
         
         t0 = time.time()
         
         for i in range(len(imgs)):
             imgs[i] = imgs[i].to(device)
         
-        sktt = sktt.to(device)
-        
+
         optimizer.zero_grad()
         
         # Calculate flow between reference frames I0 and I1
         img0 = imgs[0]
         img1 = imgs[-1]
         
-        imgt_temp = netT(torch.cat((sktt, img0, img1), dim = 1))
+        imgt_temp = netT(torch.cat((img0, img1), dim = 1))
         featSkt = sketExt(imgt_temp)
         featIg0 = imagExt(img0)
         featIg1 = imagExt(img1)
@@ -275,7 +276,7 @@ for epoch in range(start_epoch, args.epochs):
         O_t0 = occlusiCheck(f_t0, f_0t)
         O_t1 = occlusiCheck(f_t1, f_1t)
 
-        W_0 = blenEst(torch.cat((I_t0, I_t1, O_t0, O_t1, sktt), dim = 1))
+        W_0 = blenEst(torch.cat((I_t0, I_t1, O_t0, O_t1), dim = 1))
         
         W_1 = 1 - W_0
         I_t = W_0 * I_t0 + W_1 * I_t1
@@ -318,7 +319,7 @@ for epoch in range(start_epoch, args.epochs):
                 O_k0 = occlusiCheck(f_k0, f_0k)
                 O_kt = occlusiCheck(f_kt, f_tk)
 
-                W_0 = blenEst(torch.cat((I_k0, I_kt, O_k0, O_kt, flowBackWarp(sktt, f_kt)), dim = 1))
+                W_0 = blenEst(torch.cat((I_k0, I_kt, O_k0, O_kt, flowBackWarp(f_kt)), dim = 1))
                 W_1 = 1 - W_0
                 I_k = W_0 * I_k0 + W_1 * I_kt
                 

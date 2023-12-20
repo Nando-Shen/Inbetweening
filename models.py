@@ -11,7 +11,7 @@ class ResNet(nn.Module):
         super(ResNet, self).__init__()
         
         self.block1 = nn.Sequential(
-            nn.Conv2d(7, 64, kernel_size=7, padding=3),
+            nn.Conv2d(6, 64, kernel_size=7, padding=3),
             nn.LeakyReLU(negative_slope=0.1)
         )
         
@@ -55,7 +55,7 @@ class blendNet(nn.Module):
     def __init__(self):
         super(blendNet, self).__init__()
         
-        self.block1 = nn.Sequential(nn.Conv2d(9, 64, kernel_size=7, padding=3), nn.LeakyReLU(negative_slope=0.1))
+        self.block1 = nn.Sequential(nn.Conv2d(8, 64, kernel_size=7, padding=3), nn.LeakyReLU(negative_slope=0.1))
         self.block2 = nn.Sequential(nn.Conv2d(64, 64, kernel_size=7, padding=3), nn.LeakyReLU(negative_slope=0.1))
         self.block3 = nn.Sequential(nn.Conv2d(64, 1, kernel_size=7, padding=3), nn.Sigmoid())
         
