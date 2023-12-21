@@ -5,6 +5,8 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision.transforms as transforms
 from tensorboardX import SummaryWriter
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 
 import model_deform
 import models
