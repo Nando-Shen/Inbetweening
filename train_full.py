@@ -75,8 +75,8 @@ transform = transforms.Compose([transforms.ToTensor()])
 revtransf = transforms.Compose([transforms.ToPILImage()])
 
 from atd12k import get_loader
-train_loader = get_loader('train', args.dataset_dir, args.batch_size, shuffle=True, num_workers=args.num_workers)
-valid_loader = get_loader('test', args.dataset_dir, args.test_batch_size, shuffle=False, num_workers=args.num_workers)
+train_loader = get_loader('train', args.dataset_dir, args.batch_size, shuffle=True, num_workers=1)
+valid_loader = get_loader('test', args.dataset_dir, args.test_batch_size, shuffle=False, num_workers=1)
 
 # trainset = dataloader_full.SuperSloMo(root=args.dataset_dir, transform=transform, train=True, frm_num = args.frm_num)
 # train_sample = torch.utils.data.sampler.RandomSampler(trainset)
