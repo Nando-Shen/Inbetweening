@@ -122,7 +122,7 @@ def validate():
     
     with torch.no_grad():
         
-        for validationIndex, (imgs, path) in enumerate(valid_loader):
+        for validationIndex, (imgs, gt, path) in enumerate(valid_loader):
 
             for i in range(len(imgs)):
                 imgs[i] = imgs[i].to(device)
@@ -245,7 +245,7 @@ for epoch in range(start_epoch, args.epochs):
     sumReconLoss = 0
     sumTrainLoss = 0
 
-    for trainIndex, (imgs) in enumerate(train_loader):
+    for trainIndex, (imgs, gt) in enumerate(train_loader):
         
         t0 = time.time()
         
