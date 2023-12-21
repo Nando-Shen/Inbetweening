@@ -5,8 +5,6 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision.transforms as transforms
 from tensorboardX import SummaryWriter
-import os
-os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 
 import model_deform
 import models
@@ -34,7 +32,7 @@ print("torch.cuda.is_available: ", torch.cuda.is_available())
 print("torch.cuda.device_count: ", torch.cuda.device_count())
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-multiGPUs = [0, 1, 2, 3]
+multiGPUs = [0, 1]
 
 netT   = models.ResNet()
 sketExt = models.PWCExtractor()
