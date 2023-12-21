@@ -12,7 +12,7 @@ import dataloader_full
 
 # For parsing commandline arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("--dataset_dir", type=str, default='/share/kuhu6123/atd12k_points/atd12k_points ')
+parser.add_argument("--dataset_dir", type=str, default='/share/kuhu6123/atd12k_points/atd12k_points')
 parser.add_argument("--checkpt_dir", type=str, default='./checkpoints')
 parser.add_argument("--cont", type=bool, default=False, help='set to True and set `checkpoint` path.')
 parser.add_argument("--contpt", type=str, default='./checkpoints/.ckpt', help='path of checkpoint for pretrained model')
