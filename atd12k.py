@@ -33,7 +33,7 @@ class ATD12k(Dataset):
             img1 = os.path.join(self.data_root, d, 'frame3.jpg')
 
             gt = os.path.join(self.data_root, d, 'frame2.jpg')
-            data_list.append([img0, img1, gt, d])
+            data_list.append([img0, gt, img1, d])
 
         self.data_list = data_list
 
@@ -70,21 +70,21 @@ class ATD12k(Dataset):
                 random.seed(seed)
                 images_.append(self.transforms(img_))
             images = images_
+            #
+            # gt = images[2]
+            #
+            # images = images[:2]
 
-            gt = images[2]
-
-            images = images[:2]
-
-            return images, gt
+            return images
         else:
             T = self.transforms
             images = [T(img_.resize(size)) for img_ in images]
 
-            gt = images[2]
-            images = images[:2]
+            # gt = images[2]
+            # images = images[:2]
             imgpath = self.data_list[index][3]
 
-            return images, gt, imgpath
+            return images, imgpath
 
     def __len__(self):
         if self.training:

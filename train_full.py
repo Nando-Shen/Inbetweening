@@ -20,7 +20,7 @@ parser.add_argument("--init_lr", type=float, default=0.0001, help='set initial l
 parser.add_argument("--epochs", type=int, default=100, help='number of epochs to train.')
 parser.add_argument("--batch_size", type=int, default=4, help='batch size for training.')
 parser.add_argument("--checkpoint_epoch", type=int, default=5, help='checkpoint saving frequency. N: after every N epochs.')
-parser.add_argument("--frm_num", type=int, default=7)
+parser.add_argument("--frm_num", type=int, default=3)
 args = parser.parse_args()
 
 log_name = './log/full_model'
@@ -122,7 +122,7 @@ def validate():
     
     with torch.no_grad():
         
-        for validationIndex, (imgs, gt, path) in enumerate(valid_loader):
+        for validationIndex, (imgs, path) in enumerate(valid_loader):
 
             for i in range(len(imgs)):
                 imgs[i] = imgs[i].to(device)
@@ -245,7 +245,7 @@ for epoch in range(start_epoch, args.epochs):
     sumReconLoss = 0
     sumTrainLoss = 0
 
-    for trainIndex, (imgs, gt) in enumerate(train_loader):
+    for trainIndex, (imgs) in enumerate(train_loader):
         
         t0 = time.time()
         
