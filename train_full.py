@@ -108,12 +108,12 @@ if args.cont:
     ImagRef.load_state_dict(model_dict['state_dict_ImagRef'])
 else:
     start_epoch = 0
-    model_dict = torch.load('./checkpoints/frame_synthesis_model.ckpt')
-    netT.load_state_dict(model_dict['state_dict_netT'])
-    sketExt.load_state_dict(model_dict['state_dict_sketExt'])
-    imagExt.load_state_dict(model_dict['state_dict_imagExt'])
-    flowEst.load_state_dict(model_dict['state_dict_flowEst'])
-    blenEst.load_state_dict(model_dict['state_dict_blenEst'])
+    # model_dict = torch.load('./checkpoints/frame_synthesis_model.ckpt')
+    # netT.load_state_dict(model_dict['state_dict_netT'])
+    # sketExt.load_state_dict(model_dict['state_dict_sketExt'])
+    # imagExt.load_state_dict(model_dict['state_dict_imagExt'])
+    # flowEst.load_state_dict(model_dict['state_dict_flowEst'])
+    # blenEst.load_state_dict(model_dict['state_dict_blenEst'])
     
 # Validation function 
 def validate():
