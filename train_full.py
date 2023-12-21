@@ -40,7 +40,7 @@ imagExt = models.PWCExtractor()
 flowEst = models.Network()
 blenEst = models.blendNet()
 flowRef = models.UNet(14, 8)
-ImagRef = model_deform.DeformUNet(9, 15)
+ImagRef = model_deform.DeformUNet(9, 3)
 
 W = 576
 H = 384
