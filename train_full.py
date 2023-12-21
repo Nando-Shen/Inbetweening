@@ -190,7 +190,7 @@ def validate():
                     O_k0 = occlusiCheck(f_k0, f_0k)
                     O_kt = occlusiCheck(f_kt, f_tk)
 
-                    W_0 = blenEst(torch.cat((I_k0, I_kt, O_k0, O_kt, flowBackWarp( f_kt)), dim = 1))
+                    W_0 = blenEst(torch.cat((I_k0, I_kt, O_k0, O_kt), dim = 1))
                     W_1 = 1 - W_0
                     I_k = W_0 * I_k0 + W_1 * I_kt
 
@@ -222,7 +222,7 @@ def validate():
                     O_kt = occlusiCheck(f_kt, f_tk)
                     O_k1 = occlusiCheck(f_k1, f_1k)
 
-                    W_0 = blenEst(torch.cat((I_kt, I_k1, O_kt, O_k1, flowBackWarp(sktt, f_kt)), dim = 1))
+                    W_0 = blenEst(torch.cat((I_kt, I_k1, O_kt, O_k1), dim = 1))
                     W_1 = 1 - W_0
                     I_k = W_0 * I_kt + W_1 * I_k1
 
@@ -319,7 +319,7 @@ for epoch in range(start_epoch, args.epochs):
                 O_k0 = occlusiCheck(f_k0, f_0k)
                 O_kt = occlusiCheck(f_kt, f_tk)
 
-                W_0 = blenEst(torch.cat((I_k0, I_kt, O_k0, O_kt, flowBackWarp(f_kt)), dim = 1))
+                W_0 = blenEst(torch.cat((I_k0, I_kt, O_k0, O_kt), dim = 1))
                 W_1 = 1 - W_0
                 I_k = W_0 * I_k0 + W_1 * I_kt
                 
@@ -351,7 +351,7 @@ for epoch in range(start_epoch, args.epochs):
                 O_kt = occlusiCheck(f_kt, f_tk)
                 O_k1 = occlusiCheck(f_k1, f_1k)
 
-                W_0 = blenEst(torch.cat((I_kt, I_k1, O_kt, O_k1, flowBackWarp(sktt, f_kt)), dim = 1))
+                W_0 = blenEst(torch.cat((I_kt, I_k1, O_kt, O_k1), dim = 1))
                 W_1 = 1 - W_0
                 I_k = W_0 * I_kt + W_1 * I_k1
                 
