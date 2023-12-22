@@ -5,6 +5,8 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision.transforms as transforms
 from tensorboardX import SummaryWriter
+import os
+from torchvision.utils import save_image as imwrite
 
 import model_deform
 import models
@@ -14,13 +16,15 @@ import dataloader_full
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset_dir", type=str, default='/share/kuhu6123/atd12k_points/atd12k_points')
 parser.add_argument("--checkpt_dir", type=str, default='./checkpoints')
-parser.add_argument("--cont", type=bool, default=False, help='set to True and set `checkpoint` path.')
-parser.add_argument("--contpt", type=str, default='./checkpoints/.ckpt', help='path of checkpoint for pretrained model')
+parser.add_argument("--cont", type=bool, default=True, help='set to True and set `checkpoint` path.')
+parser.add_argument("--contpt", type=str, default='./checkpoints/full_model_29.ckpt', help='path of checkpoint for pretrained model')
 parser.add_argument("--init_lr", type=float, default=0.0001, help='set initial learning rate.')
 parser.add_argument("--epochs", type=int, default=100, help='number of epochs to train.')
 parser.add_argument("--batch_size", type=int, default=4, help='batch size for training.')
 parser.add_argument("--checkpoint_epoch", type=int, default=5, help='checkpoint saving frequency. N: after every N epochs.')
 parser.add_argument("--frm_num", type=int, default=3)
+parser.add_argument("--result_dir", type=str, default='./inbet')
+
 args = parser.parse_args()
 
 log_name = './log/full_model'
@@ -232,6 +236,12 @@ def validate():
 
             imgref = ImagRef(torch.cat(imgall, dim = 1)) + torch.cat(imgres, dim = 1)
 
+            for idx in range(I_t.size()[0]):
+                # print(idx)
+                # print(datapath[idx])
+                os.makedirs(args.result_dir + '/' + path[idx])
+                imwrite(I_t[idx], args.result_dir + '/' + path[idx] + '/inbetwenn.png')
+
             recnLoss = L1_lossFn(imgref, torch.cat(imgs[1:-1], dim = 1))
 
             tloss += recnLoss.item()  
@@ -239,7 +249,8 @@ def validate():
     return tloss / len(valid_loader)
 
 # Main training loop
-
+validate()
+exit()
 for epoch in range(start_epoch, args.epochs):
     
     sumReconLoss = 0
